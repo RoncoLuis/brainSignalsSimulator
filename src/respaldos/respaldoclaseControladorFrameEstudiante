@@ -1,0 +1,70 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package app.controlador;
+
+import app.modelo.Usuario;
+import app.vista.JFrameEstudiante;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Date;
+
+public class ControladorFrameEstudiante extends MouseAdapter {
+
+    JFrameEstudiante jFrameEstudiante;
+    Usuario usuario;
+//
+//    private int id_usuario;
+//    private int u_tipo;
+//    private String usuario;
+//    private String correo;
+//    private Date fecha_reg;
+
+       public ControladorFrameEstudiante(Usuario usuario) {
+        this.usuario=usuario;
+        jFrameEstudiante = new JFrameEstudiante();
+        jFrameEstudiante.setVisible(true);
+        setTextos();
+        jFrameEstudiante.lblFormulario.addMouseListener(this);
+        jFrameEstudiante.lblPruebas.addMouseListener(this);
+        jFrameEstudiante.lblContacto.addMouseListener(this);
+        jFrameEstudiante.lblCerrarSesion.addMouseListener(this);
+
+    }
+
+//    public ControladorFrameEstudiante(int id_usuario, int u_tipo, String usuario, String correo, Date fecha_reg) {
+//        this.id_usuario = id_usuario;
+//        this.u_tipo = u_tipo;
+//        this.usuario = usuario;
+//        this.correo = correo;
+//        this.fecha_reg = fecha_reg;
+//        jFrameEstudiante = new JFrameEstudiante();
+//        jFrameEstudiante.setVisible(true);
+//        setTextos();
+//        jFrameEstudiante.lblFormulario.addMouseListener(this);
+//        jFrameEstudiante.lblPruebas.addMouseListener(this);
+//        jFrameEstudiante.lblContacto.addMouseListener(this);
+//        jFrameEstudiante.lblCerrarSesion.addMouseListener(this);
+//
+//    }
+
+    private void setTextos() {
+        jFrameEstudiante.txtUsuario.setText(usuario.getUNombre());
+        jFrameEstudiante.txtCorreo.setText(usuario.getUCorreo());
+        jFrameEstudiante.txtFecha.setText(usuario.getUFechaReg().toString());
+        jFrameEstudiante.txtTipo.setText("Estudiante");
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (e.getSource() == jFrameEstudiante.lblFormulario) {
+            jFrameEstudiante.setVisible(false);
+            ControladorFrameFormEstudiante cffe = new ControladorFrameFormEstudiante(usuario);
+            //ControladorFrameFormEstudiante cffe = new ControladorFrameFormEstudiante(id_usuario);
+//            JFrameFormEstudiante jffe = new JFrameFormEstudiante();
+//            jffe.setVisible(true);
+        }
+    }
+}

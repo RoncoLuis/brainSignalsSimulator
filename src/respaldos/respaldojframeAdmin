@@ -1,0 +1,143 @@
+package app.controlador;
+
+import app.modelo.DAO.UsuarioDAO;
+import app.modelo.Usuario;
+import app.vista.JFrameAdministrador;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+public class ControladorFrameAdministrador extends MouseAdapter implements ActionListener {
+
+    JFrameAdministrador jFrameAdministrador;
+    Usuario usuario;
+    UsuarioDAO usuarioDAO;
+    DefaultTableModel model;
+
+    public ControladorFrameAdministrador(UsuarioDAO usuarioDAO) {
+        this.usuarioDAO = usuarioDAO;
+        jFrameAdministrador = new JFrameAdministrador();
+        jFrameAdministrador.setVisible(true);
+        jFrameAdministrador.btnBuscar.addActionListener(this);
+        jFrameAdministrador.btnListar.addActionListener(this);
+        jFrameAdministrador.btnNuevo.addActionListener(this);
+        jFrameAdministrador.btnEliminar.addActionListener(this);
+        jFrameAdministrador.lblCerrarS.addMouseListener(this);
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == jFrameAdministrador.btnListar) {
+            llenarTabla();
+        }
+        if (e.getSource() == jFrameAdministrador.btnEliminar) {
+            int f_inicio = jFrameAdministrador.tblUsuarios.getSelectedRow();
+            int f_selec = jFrameAdministrador.tblUsuarios.getSelectedRowCount();
+            ArrayList<String> lista_id = new ArrayList();
+            String id_usuario = "";
+            if (f_inicio > 0) {
+                for (int i = 0; i < f_selec; i++) {
+                    id_usuario = String.valueOf(jFrameAdministrador.tblUsuarios.getValueAt(i + f_inicio, 0));
+                    lista_id.add(id_usuario);
+                }
+                for (int i = 0; i < f_selec; i++) {
+                    int resp_usuario = JOptionPane.showConfirmDialog(null, "!Advertencia¡\nse eliminara el usuario con id:" + id_usuario);
+                    int id_us = Integer.parseInt(id_usuario);
+                    if (resp_usuario == 0) {
+                        usuarioDAO.borrarUsuario(id_us);
+                        llenarTabla();
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "!Upss!\ndebe seleccionar al menos un registro");
+            }
+        }
+
+        if (e.getSource() == jFrameAdministrador.btnNuevo) {
+            CFrameAdminRegistro adminRegistro = new CFrameAdminRegistro(usuarioDAO);
+        }
+
+        if (e.getSource()== jFrameAdministrador.btnBuscar) {
+            String correo = jFrameAdministrador.txtBuscarCorreo.getText();
+            tablaEncontrado(correo);
+        }
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (e.getSource() == jFrameAdministrador.lblCerrarS) {
+            this.jFrameAdministrador.setVisible(false);
+            usuarioDAO = new UsuarioDAO();
+            ControladorFrameInicioSesion cfis = new ControladorFrameInicioSesion(usuarioDAO);
+        }
+    }
+
+    public void llenarTabla() {
+        usuarioDAO = new UsuarioDAO();//para llenar el jtable debo pasar como referencia el usuarioDAO
+        String titulos[] = {"Id_Usuario", "Tipo", "Usuario", "Correo", "Contraseña", "Fecha Registro"};
+        model = new DefaultTableModel(null, titulos);
+        String fila[] = new String[6];
+        List<Usuario> lista = usuarioDAO.listarUsuarios();
+        lista.forEach((u) -> {
+            String tipo_usuario = "";
+            switch (u.getUTipo()) {
+                case 1:
+                    tipo_usuario = "Estudiante";
+                    break;
+                case 2:
+                    tipo_usuario = "Docente";
+                    break;
+                case 3:
+                    tipo_usuario = "Investigador";
+                    break;
+            }
+            fila[0] = u.getIdUsuario().toString();
+            fila[1] = tipo_usuario;
+            fila[2] = u.getUNombre();
+            fila[3] = u.getUCorreo();
+            fila[4] = u.getUPassword();
+            fila[5] = u.getUFechaReg().toString();
+
+            model.addRow(fila);
+        });
+        jFrameAdministrador.tblUsuarios.setModel(model);
+    }
+
+     public void tablaEncontrado(String correo) {
+        usuarioDAO = new UsuarioDAO();//para llenar el jtable debo pasar como referencia el usuarioDAO
+        String titulos[] = {"Id_Usuario", "Tipo", "Usuario", "Correo", "Contraseña", "Fecha Registro"};
+        model = new DefaultTableModel(null, titulos);
+        String fila[] = new String[6];
+        ArrayList<Usuario> lista = usuarioDAO.buscarUsuario(correo);
+        lista.forEach((u) -> {
+            String tipo_usuario = "";
+            switch (u.getUTipo()) {
+                case 1:
+                    tipo_usuario = "Estudiante";
+                    break;
+                case 2:
+                    tipo_usuario = "Docente";
+                    break;
+                case 3:
+                    tipo_usuario = "Investigador";
+                    break;
+            }
+            fila[0] = u.getIdUsuario().toString();
+            fila[1] = tipo_usuario;
+            fila[2] = u.getUNombre();
+            fila[3] = u.getUCorreo();
+            fila[4] = u.getUPassword();
+            fila[5] = u.getUFechaReg().toString();
+
+            model.addRow(fila);
+        });
+        jFrameAdministrador.tblUsuarios.setModel(model);
+    }
+}

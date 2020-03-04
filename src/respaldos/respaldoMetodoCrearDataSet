@@ -1,0 +1,61 @@
+ private XYDataset createDataset() {
+        ArrayList<Coordenada> coordenada = new ArrayList<>();
+        File archivo = new File("LuisRNuevo500Intermitente_3.txt");
+        Scanner s = null;
+        try {
+            s = new Scanner(archivo);
+            while (s.hasNext()) {
+                String linea = s.nextLine();
+                String[] cortaString = linea.split(SEPARADOR);
+                Coordenada c = new Coordenada();
+                c.setTiempo(Double.parseDouble(cortaString[0]));
+                c.setVoltaje(Double.parseDouble(cortaString[1]));
+                coordenada.add(c);
+            }
+
+            for (int i = 0; i <coordenada.size(); i++) {
+
+                double tiempo = coordenada.get(i).getTiempo();
+                double voltaje = coordenada.get(i).getVoltaje();
+
+                System.out.println(tiempo+","+voltaje);
+            }
+            // br = new BufferedReader(new FileReader(archivo));
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(XYLineChart_AWT.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (s != null) {
+                    s.close();
+                }
+            } catch (Exception ex) {
+                ex.getMessage();
+            }
+        }
+
+        final XYSeries serie = new XYSeries("Coordenadas");
+        Iterator<Coordenada> itrCoordenada = coordenada.iterator();
+        while(itrCoordenada.hasNext()){
+        Coordenada coord = itrCoordenada.next();
+        serie.add(coord.getTiempo(),coord.getVoltaje());
+        }
+
+//        coordenadas.add(0.20069, 1.2598);
+//        coordenadas.add(0.24469, 12.23298);
+//        coordenadas.add(0.20899, 4.2598);
+//        coordenadas.add(0.2780, 5.2598);
+//        coordenadas.add(0.2034, 3.2598);
+//        coordenadas.add(0.20045, 2.2598);
+
+//        final XYSeries v1 = new XYSeries("otro");
+//        v1.add(0.20069, 1.2598);
+//        v1.add(0.24469, 12.23298);
+//        v1.add(0.20899, 4.2598);
+
+//     	0.40137	0.60206	0.80275	1.0034	1.2041	1.4048	1.6055	1.8062	2.0069
+//	1.7041	1.416	1.1914	1.7822	1.4111	1.3086	1.5869	1.7236	1.333
+        final XYSeriesCollection dataset = new XYSeriesCollection();
+        dataset.addSeries(serie);
+//        dataset.addSeries(v1);
+        return dataset;
+    }

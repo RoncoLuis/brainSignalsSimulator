@@ -1,0 +1,58 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package pruebas;
+
+import app.controlador.ControladorFrameInicioSesion;
+//import app.controlador.ControladorFrameRegistro;
+import app.modelo.DAO.UsuarioDAO;
+import javax.swing.JOptionPane;
+//import app.modelo.Usuario;
+//import java.text.SimpleDateFormat;
+//import java.util.Date;
+
+/**
+ *
+ * @author LR21
+ */
+public class PruebaRegistroUsuario {
+
+    public static void main(String arg[]) {
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+//        int u_tipo = usuarioDAO.accesoUsuario("admin", "admin");
+//        switch (u_tipo) {
+//            case 1:
+//                JOptionPane.showMessageDialog(null, "usuario tipo 1 estudiante");
+//                break;
+//            case 2:
+//                JOptionPane.showMessageDialog(null, "usuario tipo 2 docente");
+//                break;
+//            case 3:
+//                JOptionPane.showMessageDialog(null, "usuario tipo 3 investigador");
+//                break;
+//            case 4:
+//                JOptionPane.showMessageDialog(null, "bienvenido administrador");
+//                break;
+//            default:
+//                JOptionPane.showMessageDialog(null, "no se encuentra registrado");
+//        }
+        //ControladorFrameRegistro cfr = new ControladorFrameRegistro(usuarioDAO);
+        ControladorFrameInicioSesion cfis = new ControladorFrameInicioSesion(usuarioDAO);
+        //Date actual = new java.util.Date();
+        //SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+//    Date fecha = new java.sql.Date(0);
+//        java.util.Date date = new Date();
+//        java.sql.Date fechaActual = new java.sql.Date(date.getTime());
+//        System.out.println(fechaActual);
+//        UsuarioDAO uDAO = new UsuarioDAO();
+//        Usuario u = new Usuario();
+//        u.setUTipo(1);
+//        u.setUNombre("Prueba");
+//        u.setUCorreo("correoPrueba@hotmail.com");
+//        u.setUPassword("pruebaPass");
+//        u.setUFechaReg(fechaActual);
+//        uDAO.insertaUsuario(u);
+    }
+}

@@ -1,0 +1,81 @@
+package app.controlador;
+
+import app.modelo.DAO.EstudianteDAO;
+import app.modelo.DAO.PersonaDAO;
+import app.modelo.Estudiante;
+import app.modelo.Persona;
+import app.modelo.Usuario;
+import app.vista.JFrameFormEstudiante;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
+
+/**
+ *
+ * @author LR21
+ */
+public class ControladorFrameFormEstudiante implements ActionListener {
+
+    JFrameFormEstudiante jFrameFormEstudiante;
+    Usuario usuario;
+   // private int id_usuario;
+
+    public ControladorFrameFormEstudiante(Usuario usuario) {
+        this.usuario = usuario;
+        this.jFrameFormEstudiante = new JFrameFormEstudiante();
+        jFrameFormEstudiante.setVisible(true);
+        jFrameFormEstudiante.btnAceptar.addActionListener(this);
+        jFrameFormEstudiante.btnSalir.addActionListener(this);
+    }
+//    public ControladorFrameFormEstudiante(int id_usuario) {
+//        this.id_usuario = id_usuario;
+//        this.jFrameFormEstudiante = new JFrameFormEstudiante();
+//        jFrameFormEstudiante.setVisible(true);
+//        jFrameFormEstudiante.btnAceptar.addActionListener(this);
+//    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == jFrameFormEstudiante.btnAceptar) {
+            //informacion de la tabla persona
+            //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            int id_usuario = usuario.getIdUsuario();
+            String nombre = jFrameFormEstudiante.txtNombre.getText();
+            String paterno = jFrameFormEstudiante.txtAp_Paterno.getText();
+            String materno = jFrameFormEstudiante.txtAp_Materno.getText();
+            String genero = jFrameFormEstudiante.cmbGenero.getSelectedItem().toString();
+            java.util.Date date = jFrameFormEstudiante.calendario.getDate();
+            java.sql.Date fecha_nacimiento = new java.sql.Date(date.getTime());
+            //informacion de la tabla estudiante
+            int matricula = Integer.parseInt(jFrameFormEstudiante.txtMatricula.getText());
+            String carrera = jFrameFormEstudiante.cmbCarrera.getSelectedItem().toString();
+            int semestre = Integer.parseInt(jFrameFormEstudiante.cmbSemestre.getSelectedItem().toString());
+
+            //se crea el objeto persona
+            Persona persona = new Persona(nombre, paterno, materno, genero, fecha_nacimiento, id_usuario);
+            Estudiante estudiante = new Estudiante(matricula, carrera, semestre, id_usuario);
+            //se hacen los insert a la tabla
+            PersonaDAO personaDAO = new PersonaDAO();
+            EstudianteDAO estudianteDAO = new EstudianteDAO();
+
+            boolean resp1 = personaDAO.insertPersona(persona);
+            boolean resp2=estudianteDAO.insertEstudiante(estudiante);
+            if (resp1 && resp2 == true) {
+                JOptionPane.showMessageDialog(null,"Registro insertado correctamente");
+                this.jFrameFormEstudiante.setVisible(false);
+                ControladorFrameEstudiante cfe = new ControladorFrameEstudiante(usuario);
+
+            }else{
+                JOptionPane.showMessageDialog(null,"lo sentimos los datos de este usuario ya se encuentran registrados en la BD\n"
+                        + "si requiere modificación por favor contacte al administrador");
+            }
+
+        }
+        if (e.getSource() == jFrameFormEstudiante.btnSalir) {
+            this.jFrameFormEstudiante.setVisible(false);
+            ControladorFrameEstudiante cfe = new ControladorFrameEstudiante(usuario);
+        }
+
+    }
+
+}

@@ -1,0 +1,107 @@
+/*Script para la base de datos proyecto de residencias V2
+  Luis Ronquillo
+  03/28/2018
+*/
+drop database bd_psnl;
+show databases;
+CREATE DATABASE bd_psnl;
+USE bd_psnl;
+
+/*pruebas de inserts en la tabla usuario*/
+insert into usuario values(null,1,'RoncoLuis','luiseduardoronquillo@hotmail.com','P455w0rd123',curdate());
+insert into usuario values(null,2,'DrAsael','asael@hotmail.com','asael',curdate());
+insert into usuario values(null,3,'MiguelG','miguel@hotmail.com','miguel',curdate());
+insert into usuario values(null,3,'LaGuera','guera@hotmail.com','guera',curdate());
+insert into usuario values(null,4,'administrador','admin@admin.com','P445w0rd123',curdate());
+select * from usuario;
+
+/*insert en tabla persona */
+INSERT INTO persona(p_nombre,p_ap_paterno,p_ap_materno,p_genero,p_fecha_nacimiento,p_id_usuario) VALUES(?,?,?,?,?,?);
+select * from persona;
+
+/*insert en tabla estudiante*/
+insert into estudiante (e_matricula,e_carrera,e_semestre,e_id_usuario) VALUES(?,?,?,?);
+select * from estudiante;
+
+/*insert en tabla docente*/
+insert into docente values (null,'division estudios de postgrado','Dr.Ciencias Exactas',000002,000002);
+select * from docente;
+/*insert en tabla investigador*/
+insert into investigador values(null,'L@cit','Ing.Sistemas Computacionales','Instituto tecnologico de leon',000003,000003);
+insert into investigador values(null,'L@cit','Ing.Sistemas Computacionales','Instituto tecnologico de leon',000005,000004);
+select * from investigador;
+
+/*consultas a la bd*/
+select u_nombre,u_correo
+from usuario as u
+join docente as d
+on u.id_usuario = d.doc_id_usuario;
+
+select *
+from usuario as u
+join persona as p
+on u.id_usuario = p.p_id_usuario;
+
+/*borrar tablas*/
+DROP TABLE IF EXISTS estudiante, docente, investigador,persona;
+
+SELECT id_usuario,u_nombre,u_correo FROM usuario ORDER BY id_usuario;
+
+/*ingreso de usuario*/
+select * from usuario where u_nombre = 'RoncoLuis' and u_password = 'P455w0rd123';
+
+delete from persona where id_usuario = 000007;
+
+SELECT id_usuario FROM usuario WHERE u_nombre='RoncoLuis';
+
+create table usuario(
+id_usuario int(6) zerofill auto_increment,
+u_tipo int not null,
+u_nombre varchar(100) not null unique,
+u_correo varchar(120) not null unique,
+u_password varchar(120) not null,
+u_fecha_reg date not null,
+primary key(id_usuario)
+);
+
+create table persona(
+id_persona int(6) zerofill auto_increment,
+p_nombre varchar(100) not null,
+p_ap_paterno varchar(100) not null,
+p_ap_materno varchar(100) not null,
+p_genero varchar(50) null,
+p_fecha_nacimiento date null,
+p_id_usuario int(6) zerofill unique,
+primary key(id_persona),
+foreign key(p_id_usuario) references usuario(id_usuario)
+);
+
+create table estudiante(
+id_estudiante int(6) zerofill auto_increment,
+e_matricula int(8) not null,
+e_carrera varchar(100) not null,
+e_semestre int not null,
+e_id_usuario int(6) zerofill unique,
+primary key (id_estudiante),
+foreign key(e_id_usuario) references usuario(id_usuario)
+);
+
+create table docente(
+id_docente int(6) zerofill auto_increment,
+doc_departamento varchar(100) not null,
+doc_titulo varchar(100) not null,
+doc_id_usuario int(6) zerofill unique,
+primary key (id_docente),
+foreign key(doc_id_usuario) references usuario(id_usuario)
+);
+
+create table investigador(
+id_investigador int(6) zerofill auto_increment,
+inv_laboratorio varchar(100) not null,
+inv_titulo varchar(100) not null,
+inv_institucion varchar(100) not null,
+inv_id_usuario int(6) zerofill unique,
+primary key (id_investigador),
+foreign key(inv_id_usuario) references usuario(id_usuario)
+);
+
